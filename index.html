@@ -1807,9 +1807,10 @@ $( document ).on( "pageinit", "#home", function() {
 			<!-- <a href="#dialog" data-icon="info">Контакты</a> -->
 		</div> 
 
-		<input type="search" name="ID" value="Например: дисмб11/1, Пименов, гл.101"  id="search" onfocus="if (this.value == 'Например: дисмб11/1, Пименов, гл.101') this.value = '';" onblur="if (this.value == '') this.value = 'Например: дисмб11/1, Пименов, гл.101';">
+		<div id="ya-site-results" onclick="return {'tld': 'ru','language': 'ru','encoding': '','htmlcss': '1.x','updatehash': true}"></div><script type="text/javascript">(function(w,d,c){var s=d.createElement('script'),h=d.getElementsByTagName('script')[0];s.type='text/javascript';s.async=true;s.charset='utf-8';s.src=(d.location.protocol==='https:'?'https:':'http:')+'//site.yandex.net/v2.0/js/all.js';h.parentNode.insertBefore(s,h);(w[c]||(w[c]=[])).push(function(){Ya.Site.Results.init();})})(window,document,'yandex_site_callbacks');</script>
+
 		<div style="margin: 0 1%;"><b>	Расписание на осенний семестр от 25 сентября 2015 года</b></div>
-			<button data-corners="false"  id='go' value=" Искать " data-theme="c" >Поиск</button>
+		
 			<ul data-role="listview" data-corners="false" data-inset="true" data-mini="true" data-theme="b">
 				<li id="li0" style="display:none"><a align="center" id="0" href="#"  data-icon="arrow-r" data-iconpos="right">Неизвестно</a>
 				<a href="#" onclick="clearCookie('0')" data-rel="popup" data-icon="delete" data-transition="pop" data-position-to="window" >Удалить</a>
