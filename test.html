@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Test</title>
+        <script src="dist/snap.svg.js"></script>
+		<script src="dist/jquery-3.0.0.min.js"></script>
+        
+		<link href="dist/contextMenu.css?32" rel="stylesheet" type="text/css">
+        <script src="dist/contextMenu.min.js"></script>
+		
+	
+
+    </head>
+    <body>
+	<style>
+	 #svg {
+                -moz-border-radius: 10px;
+                -webkit-border-radius: 10px;
+                border-radius: 10px;
+                border: solid 2px #ccc;
+                width: 100%;
+                height: 1000px;
+                float: left;
+                margin-right: 10px;
+                font: 1em source-sans-pro, Source Sans Pro, Helvetica, sans-serif;
+            }
+	</style>
+	<svg id="svg"></svg>
+        <script>
+// First, let's create our drawing surface out of an existing SVG element
+// If you want to create a new surface just provide dimensions
+// like s = Snap(800, 600);
+var s = Snap("#svg");
+var Colors = {
+ "Кремовый А17"  : "#FFF0C7",
+ "Желтый А07"  : "#FADF10",
+ "Темно-желтый А16"  : "#F9AC00",
+ "Апельсиновый 31"  : "#EE6500",
+ "Оранжевый А03"  : "#E8440D",
+ "Красный А04"  : "#C11A2C",
+ "Терракотовый А41"  : "#903E29",
+ "Малиновый А34"  : "#F86092",
+ "Розовый А26"  : "#FFBACC",
+ "Светло-фиолетовый А36"  : "#ECD5F6",
+ "Фиолетовый А12"  : "#A250C2",
+ "Фиалковый 918"  : "#372F9B",
+ "Темно-фиолетовый 549"  : "#400A71",
+ "Серебристый A25"  : "#E4E4E4",
+ "Серый жемчуг 108"  : "#CBC4BB",
+ "Светло-салатовый 251"  : "#E2FAF2",
+ "Светло-зеленый А13"  : "#A3D108",
+ "Изумрудный 221"  : "#00AE8F",
+ "Светло-голубой А20"  : "#5AC5DF",
+ "Синий А09"  : "#0669B1",
+ "Берлинская лазурь 21"  : "#005090"}
+
+
+// Let's create a big circle in the middle:
+
+// Now let's create another small circle:
+
+// Now more interesting stuff
+// Let's assign this group as a mask for our big circle
+
+// We can also grab a pattern from an SVG
+// already embedded into our page
+//discs.attr({    fill: Snap("#pattern")});
+// Let's change the fill of the circles to gradient
+// This string means relative radial gradient
+// from white to black
+//discs.attr({fill: "r()#fff-#000"});
+// Note that we have two gradients, one for each circle
+// If we want them to share one gradient,
+// we need to use an absolute gradient with capital R
+//discs.attr({fill: "R(150, 150, 100)#fff-#000"});
+// Of course we can animate color as well
+//p.select("path").animate({stroke: "#f00"}, 1000);
+// Now let's load an external SVG file:
+var objColor=[]
+var Selected;
+var objLevel =[]
+Snap.load("17.svg", function (f) {
+    // Note that we traverse and change attr before the SVG
+    // is even added to the page
+   // f.select("polygon[fill='#09B39C']").attr({fill: "#bada55"});
+    f.selectAll("polygon[fill='#09B39C']").attr({fill: "#bada55"});
+    g = f.select("g");
+    s.append(g);
+    // Making croc draggable. Go ahead drag it around!
+	
+   //g.drag();
+  
+  // Obviously drag could take event handlers too
+    // Looks like our croc is made from more than one polygon...
+	el = s.selectAll("path")
+	el.forEach(function(item, i, el) {
+	objColor[i]=item.attr('fill');
+		item.id=i
+		item.drag()
+		item.attr({'class':'testButton'});
+		//console.log(item.attr('fill'))"fill-opacity": 0.5
+		item.mouseout(function(){item.attr({'fill-opacity':1})})
+		item.mouseover(function(){item.attr({'fill-opacity':'0.5'}); console.log(item.id)})
+		item.mousedown(function(){Selected = item.id})
+		//alert( i + ": " + item + " (массив:" + el + ")" );
+		objLevel[i]=i;
+
+	});
+	//console.log(el)
+	//console.log(objColor)
+
+var menu = [{
+        name: 'Цвета',
+        title: 'Цвета',
+		subMenu: [/* {
+            name: 'Фиолетовый А12',
+            title: 'Фиолетовый А12',
+                   fun: function () {
+				  el[Selected].attr({fill: "#A250C2"})
+					}
+				}, {
+            name: 'Фиолетовый',
+            title: 'Фиолетовый',
+                   fun: function () {
+				  el[Selected].attr({fill: "#A250C2"})
+					}
+			}, */
+		]
+
+    }, {
+        name: 'Опустить',
+        title: 'Опустить',
+        fun: function () {
+		
+		if(objLevel[Selected]>0){
+		var a = objLevel.indexOf(0);
+
+			//console.log('++'+objLevel[a])
+
+			el[a].before(el[Selected]);
+			
+			
+			//console.log('>>>>a = '+a+' '+Selected);
+
+			var b = objLevel[Selected];
+			
+			//console.log(el)
+			for(var i = 0; i < objLevel.length ; i++){
+				
+				if(objLevel[i] < b){objLevel[i]= objLevel[i]+1;}
+			}
+		}
+		objLevel[Selected] = 0
+		console.log(objLevel);
+            //alert('i am update button')
+        }
+    }, {
+        name: 'Поднять',
+        title: 'Поднять',
+        fun: function () {
+		
+		if(objLevel[Selected]<objLevel.length){
+		var a = objLevel.indexOf(objLevel.length-1);
+
+			//console.log('++'+objLevel[a])
+
+			el[a].after(el[Selected]);
+			
+			
+			//console.log('>>>>a = '+a+' '+Selected);
+
+			var b = objLevel[Selected];
+			
+			//console.log(el)
+			for(var i = 0; i < objLevel.length ; i++){
+				
+				if(objLevel[i] > b){objLevel[i]= objLevel[i]-1;}
+			}
+		}
+		objLevel[Selected] = objLevel.length-1
+		console.log(objLevel);
+            //alert('i am update button')
+        }
+    },
+	
+	{
+        name: 'delete',
+        title: 'delete button',
+        fun: function () {
+           console.log($(this));
+		   alert('i am delete button')
+        }
+    }];
+ //console.log(menu[0].subMenu[i])
+ var j=0;
+  for (var val in Colors){
+	//console.log(val)
+	menu[0].subMenu[j]=[]
+	menu[0].subMenu[j]["name"]=val
+	menu[0].subMenu[j]["title"]=val
+	menu[0].subMenu[j]["img"] = 'img/'+ val +'.png'
+	var x = menu[0].subMenu[j]
+	menu[0].subMenu[j]["fun"] = function (x) {
+				  el[Selected].attr({fill: Colors[this.title]})
+				//  console.log()
+		}
+		j++;
+	
+	
+/* 	{
+            name: 'Фиолетовый А12',
+            title: 'Фиолетовый А12',
+                   fun: function () {
+				  el[Selected].attr({fill: "#A250C2"})
+					}
+				} */
+ }
+ 
+//Calling context menu
+ $('.testButton').contextMenu(menu,{triggerOn:'contextmenu'});
+console.log(menu[0].subMenu)
+ })
+
+        </script>
+<span class="context-menu-one btn btn-neutral">right click me</span>
+</body>
+</html>
